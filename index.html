@@ -130,8 +130,9 @@
         #result {
             margin-top: 35px;
             width: 100%;
-            min-height: 450px;
+            min-height: 350px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             background: #f8fafc;
@@ -160,6 +161,7 @@
             text-align: center;
             padding: 0 15px;
             line-height: 1.6;
+            margin-top: 10px;
         }
 
         .img-modal {
@@ -226,15 +228,18 @@
             font-weight: 600;
         }
 
-        .loading {
-            color: #3a6186;
-            font-size: 20px;
-            text-align: center;
-            animation: fade 1s infinite alternate;
+        /* 新增：加载动画 */
+        .img-loading {
+            width: 80px;
+            height: 80px;
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3a6186;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
-        @keyframes fade {
-            from { opacity: 0.6; }
-            to { opacity: 1; }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -255,12 +260,11 @@
     </div>
 
     <div class="copyright">
-        <p>© 歌单补充|请联系306597159@qq.com</p>
-        <p>制作：<span class="author">7an(烤个鸭)</span>|遇到我请不要打我歌p</p>
+        <p>© 歌单补充 | 请联系306597159@qq.com</p>
+        <p>制作：<span class="author">7an（烤个鸭）</span> | 遇到我请不要打我歌p</p>
     </div>
 
     <script>
-        // 歌手列表（完整保留）
         const singerList = [
             "A-Lin", "BEYOND", "S.H.E", "不才", "蔡健雅", "蔡依林", "陈慧娴", "陈粒", "陈绮贞", "戴佩妮",
             "单依纯", "刀郎", "邓紫棋", "方大同", "房东的猫", "凤凰传奇", "古巨基", "郭采洁", "郭静",
@@ -272,10 +276,10 @@
             "张信哲", "张学友", "张远", "赵雷", "周华健", "周深", "周兴哲"
         ];
         
-        // 🔥 完全按你的规则：固定前缀 + 歌手名 + .jpg
-        const imgPrefix = "https://media.githubusercontent.com/media/zq1007www/song-search/main/img/"; 
+        // 可选：用国内镜像提速（把下面一行注释解开，注释掉原版）
+        const imgPrefix = "https://ghproxy.com/https://media.githubusercontent.com/media/zq1007www/song-search/main/img/";
+        //const imgPrefix = "https://media.githubusercontent.com/media/zq1007www/song-search/main/img/"; 
 
-        // 获取DOM元素
         const searchInput = document.getElementById('searchInput');
         const suggestList = document.getElementById('suggestList');
         const result = document.getElementById('result');
@@ -283,7 +287,6 @@
         const modalImg = document.getElementById('modalImg');
         const closeBtn = document.getElementById('closeBtn');
 
-        // 智能补全逻辑
         searchInput.addEventListener('input', function() {
             const inputVal = this.value.trim();
             suggestList.innerHTML = '';
@@ -314,7 +317,6 @@
             }
         });
 
-        // 核心搜索：纯拼接（前缀+歌手名+.jpg），无任何编码/额外处理
         function searchSongList() {
             const inputVal = searchInput.value.trim();
             result.innerHTML = '';
@@ -324,34 +326,40 @@
                 return;
             }
 
-            result.innerHTML = `<p class="loading">正在加载图片...</p>`;
+            // 显示加载动画
+            result.innerHTML = `<div class="img-loading"></div><p>正在加载图片...</p>`;
 
             if (singerList.includes(inputVal)) {
-                // 🔥 唯一逻辑：固定前缀 + 歌手名 + .jpg + 防缓存参数
                 const imgSrc = `${imgPrefix}${inputVal}.jpg?t=${Date.now()}`;
-                
                 const img = document.createElement('img');
+                
+                // 懒加载 + 跨域优化
+                img.loading = "lazy";
+                img.crossOrigin = "anonymous";
                 img.src = imgSrc;
                 img.alt = `${inputVal}的歌单`;
-                
-                // 加载成功
+
+                // 超时重试逻辑
+                let retryCount = 0;
+                img.onerror = function() {
+                    retryCount++;
+                    if (retryCount <= 1) {
+                        img.src = `${imgPrefix}${inputVal}.jpg?t=${Date.now() + Math.random()}`;
+                        result.innerHTML = `<div class="img-loading"></div><p>加载中（重试第${retryCount}次）...</p>`;
+                        return;
+                    }
+                    result.innerHTML = `
+                        <p>❌ 图片加载失败（已重试）</p>
+                        <p>拼接的链接：${imgSrc}</p>
+                        <p>原因：海外CDN访问慢，建议切换国内图床</p>
+                    `;
+                };
+
                 img.onload = function() {
                     result.innerHTML = '';
                     result.appendChild(img);
                 };
 
-                // 加载失败（显示真实拼接的链接，方便你核对）
-                img.onerror = function() {
-                    result.innerHTML = `
-                        <p>❌ 图片加载失败</p>
-                        <p>拼接的链接：${imgSrc}</p>
-                        <p>请检查：</p>
-                        <p>1. GitHub的img文件夹里是否有「${inputVal}.jpg」</p>
-                        <p>2. 文件名是否和歌手名完全一致（大小写/空格/繁体）</p>
-                    `;
-                };
-
-                // 点击放大
                 img.addEventListener('click', function(){
                     modalImg.src = this.src;
                     imgModal.style.display = 'flex';
@@ -362,7 +370,6 @@
             }
         }
 
-        // 事件绑定
         document.getElementById('searchBtn').addEventListener('click', searchSongList);
         searchInput.addEventListener('keydown', e => {
             if (e.key === 'Enter') {
@@ -371,14 +378,12 @@
             }
         });
 
-        // 点击空白处关闭补全
         document.addEventListener('click', e => {
             if (!e.target.closest('.search-box')) {
                 suggestList.style.display = 'none';
             }
         });
 
-        // 关闭弹窗
         closeBtn.addEventListener('click', function(){ 
             imgModal.style.display = 'none';
         });
