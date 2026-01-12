@@ -28,7 +28,7 @@
             max-width: 700px;
             background: #ffffff;
             border-radius: 28px;
-            padding: 35px 25px;
+            padding: 25px 25px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
             margin-bottom: 20px;
         }
@@ -36,7 +36,7 @@
         h1 {
             text-align: center;
             color: #2d3748;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             font-weight: 700;
             font-size: 26px;
             letter-spacing: 3px;
@@ -53,7 +53,7 @@
 
         #searchInput {
             width: 100%;
-            padding: 20px 22px;
+            padding: 18px 22px;
             padding-right: 110px;
             border: 2px solid #f0f0f0;
             background-color: #f8fafc;
@@ -130,7 +130,8 @@
         #result {
             margin-top: 35px;
             width: 100%;
-            min-height: 450px;
+            min-height: 280px; /* 改动8：核心！大幅降低最小高度（原450px） */
+            max-height: 350px; /* 新增：限制结果区最大高度，避免过高 */
             display: flex;
             justify-content: center;
             align-items: center;
