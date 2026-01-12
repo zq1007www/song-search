@@ -20,7 +20,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* 改动1：从space-between改为flex-start，避免底部留白 */
+            justify-content: space-between;
         }
 
         .container {
@@ -28,15 +28,15 @@
             max-width: 700px;
             background: #ffffff;
             border-radius: 28px;
-            padding: 25px 25px; /* 改动2：减少顶部内边距（原35px） */
+            padding: 35px 25px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            margin-bottom: 15px; /* 改动3：减少容器和版权区的间距（原20px） */
+            margin-bottom: 20px;
         }
 
         h1 {
             text-align: center;
             color: #2d3748;
-            margin-bottom: 20px; /* 改动4：减少标题下方间距（原30px） */
+            margin-bottom: 30px;
             font-weight: 700;
             font-size: 26px;
             letter-spacing: 3px;
@@ -53,7 +53,7 @@
 
         #searchInput {
             width: 100%;
-            padding: 18px 22px; /* 改动5：减少输入框内边距（原20px） */
+            padding: 20px 22px;
             padding-right: 110px;
             border: 2px solid #f0f0f0;
             background-color: #f8fafc;
@@ -79,7 +79,7 @@
             right: 6px;
             top: 50%;
             transform: translateY(-50%);
-            padding: 11px 20px; /* 改动6：减少按钮内边距（原13px） */
+            padding: 13px 20px;
             background: linear-gradient(90deg, #3a6186, #89253e);
             color: #fff;
             border: none;
@@ -128,24 +128,22 @@
         }
 
         #result {
-            margin-top: 25px; /* 改动7：减少结果区顶部间距（原35px） */
+            margin-top: 35px;
             width: 100%;
-            min-height: 280px; /* 改动8：核心！大幅降低最小高度（原450px） */
-            max-height: 350px; /* 新增：限制结果区最大高度，避免过高 */
+            min-height: 450px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             background: #f8fafc;
             border-radius: 20px;
-            padding: 20px; /* 改动9：减少结果区内边距（原25px） */
+            padding: 25px;
             border: 1px solid #f0f0f0;
-            overflow: hidden; /* 新增：超出高度时隐藏，避免滚动 */
         }
 
         #result img {
             max-width: 100%;
-            max-height: 300px; /* 新增：限制图片最大高度，适配结果区 */
+            max-height: 420px;
             border-radius: 16px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
             transition: transform 0.4s ease, box-shadow 0.4s ease;
@@ -211,16 +209,14 @@
             max-width: 700px;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 16px;
-            padding: 15px 25px; /* 改动10：减少版权区内边距（原18px） */
+            padding: 18px 25px;
             text-align: center;
             color: #64748b;
             font-size: 16px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            margin-top: 0; /* 新增：确保版权区紧贴容器 */
         }
         .copyright p {
-            line-height: 1.6; /* 改动11：减少行高（原1.8），节省空间 */
-            margin: 2px 0; /* 新增：减少段落间距 */
+            line-height: 1.8;
         }
         .copyright .tel {
             color: #3a6186;
@@ -232,7 +228,7 @@
             font-weight: 600;
         }
 
-        /* 加载动画样式保留 */
+        /* 新增：加载动画 */
         .img-loading {
             width: 80px;
             height: 80px;
@@ -265,7 +261,7 @@
 
     <div class="copyright">
         <p>© 歌单补充 | 请联系306597159@qq.com</p>
-        <p>制作：<span class="author">7an(烤个鸭)</span> | 请不要打我歌p</p>
+        <p>制作：<span class="author">7an（烤个鸭）</span> | 遇到我请不要打我歌p</p>
     </div>
 
     <script>
@@ -280,9 +276,9 @@
             "张信哲", "张学友", "张远", "赵雷", "周华健", "周深", "周兴哲"
         ];
         
-        // 可选：启用国内镜像提速
-        const imgPrefix = "https://ghproxy.com/https://media.githubusercontent.com/media/zq1007www/song-search/main/img/";
-        //const imgPrefix = "https://media.githubusercontent.com/media/zq1007www/song-search/main/img/"; 
+        // 可选：用国内镜像提速（把下面一行注释解开，注释掉原版）
+        // const imgPrefix = "https://ghproxy.com/https://media.githubusercontent.com/media/zq1007www/song-search/main/img/";
+        const imgPrefix = "https://media.githubusercontent.com/media/zq1007www/song-search/main/img/"; 
 
         const searchInput = document.getElementById('searchInput');
         const suggestList = document.getElementById('suggestList');
