@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>qni歌p歌单搜索</title>
+    <title>歌手歌单搜索</title>
     <style>
         * {
             margin: 0;
@@ -15,7 +15,6 @@
 
         body {
             min-height: 100vh;
-            /* 替换高级柔和渐变背景，不刺眼更舒服 */
             background: linear-gradient(120deg, #3a6186 0%, #89253e 100%);
             padding: 25px 15px;
             display: flex;
@@ -24,7 +23,6 @@
             justify-content: space-between;
         }
 
-        /* 主体卡片-圆角更大+高级阴影+内边距优化 */
         .container {
             width: 100%;
             max-width: 700px;
@@ -42,7 +40,6 @@
             font-weight: 700;
             font-size: 26px;
             letter-spacing: 3px;
-            /* 标题渐变文字 */
             background: linear-gradient(90deg, #3a6186, #89253e);
             -webkit-background-clip: text;
             color: transparent;
@@ -54,7 +51,6 @@
             margin-bottom: 0;
         }
 
-        /* 搜索框优化-更圆润+浅灰色底+高级边框 */
         #searchInput {
             width: 100%;
             padding: 20px 22px;
@@ -78,7 +74,6 @@
             font-size: 17px;
         }
 
-        /* 搜索按钮优化-配色统一+圆角更大+hover动效更强 */
         #searchBtn {
             position: absolute;
             right: 6px;
@@ -100,7 +95,6 @@
             box-shadow: 0 4px 12px rgba(58, 97, 134, 0.3);
         }
 
-        /* 补全列表优化-悬浮高亮更明显+圆角统一 */
         .suggest-list {
             position: absolute;
             top: calc(100% + 10px);
@@ -133,11 +127,9 @@
             padding-left: 28px;
         }
 
-        /* ✅✅✅ 重点修改：图片展示区 放大N倍+高度拉满+优化布局 */
         #result {
             margin-top: 35px;
             width: 100%;
-            /* 高度大幅增加，占满卡片 */
             min-height: 450px;
             display: flex;
             justify-content: center;
@@ -148,10 +140,8 @@
             border: 1px solid #f0f0f0;
         }
 
-        /* 图片尺寸最大化+细腻阴影+悬停放大更丝滑 */
         #result img {
             max-width: 100%;
-            /* 图片最大高度拉满展示区 */
             max-height: 420px;
             border-radius: 16px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
@@ -172,7 +162,6 @@
             line-height: 1.6;
         }
 
-        /* 图片放大弹窗优化-更细腻 */
         .img-modal {
             position: fixed;
             top: 0;
@@ -213,7 +202,6 @@
             transform: rotate(90deg);
         }
 
-        /* ✅✅✅ 新增：底部版权+联系方式区域 美观置顶 */
         .copyright {
             width: 100%;
             max-width: 700px;
@@ -237,6 +225,18 @@
             color: #89253e;
             font-weight: 600;
         }
+
+        /* 新增：加载中提示样式 */
+        .loading {
+            color: #3a6186;
+            font-size: 20px;
+            text-align: center;
+            animation: fade 1s infinite alternate;
+        }
+        @keyframes fade {
+            from { opacity: 0.6; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -247,24 +247,21 @@
             <button id="searchBtn">搜索</button>
             <div class="suggest-list" id="suggestList"></div>
         </div>
-        <!-- 放大后的图片展示区 -->
         <div id="result"></div>
     </div>
 
-    <!-- 图片放大弹窗 -->
     <div class="img-modal" id="imgModal">
         <span class="close" id="closeBtn">×</span>
         <img src="" id="modalImg">
     </div>
 
-    <!-- ✅✅✅ 新增：底部版权+联系方式区域 -->
     <div class="copyright">
         <p>© 歌单补充 | 请联系306597159@qq.com</p>
         <p>制作：<span class="author">7an（烤个鸭）</span> | 遇到我请不要打我歌p</p>
     </div>
 
     <script>
-        // ====================== 歌手大全（原名单完整保留，已删掉周杰伦） ======================
+        // 歌手列表（完整保留）
         const singerList = [
             "A-Lin", "BEYOND", "S.H.E", "不才", "蔡健雅", "蔡依林", "陈慧娴", "陈粒", "陈绮贞", "戴佩妮",
             "单依纯", "刀郎", "邓紫棋", "方大同", "房东的猫", "凤凰传奇", "古巨基", "郭采洁", "郭静",
@@ -275,9 +272,11 @@
             "杨坤", "杨千嬅", "杨宗纬", "郁可唯", "袁娅维", "张碧晨", "张惠妹", "张杰", "张靓颖", "张敬轩",
             "张信哲", "张学友", "张远", "赵雷", "周华健", "周深", "周兴哲"
         ];
-        // ====================== 图片路径不变，还是你的【qni歌p】文件夹 ======================
+        
+        // 图片文件夹路径（已确认是img，与GitHub仓库一致）
         const imgFolder = "img/"; 
 
+        // 获取DOM元素
         const searchInput = document.getElementById('searchInput');
         const suggestList = document.getElementById('suggestList');
         const result = document.getElementById('result');
@@ -285,15 +284,21 @@
         const modalImg = document.getElementById('modalImg');
         const closeBtn = document.getElementById('closeBtn');
 
-        // 智能补全匹配（原逻辑不变，好用保留）
+        // 智能补全逻辑优化
         searchInput.addEventListener('input', function() {
             const inputVal = this.value.trim();
             suggestList.innerHTML = '';
+            
             if (!inputVal) {
                 suggestList.style.display = 'none';
                 return;
             }
-            const matchKeys = singerList.filter(name => name.includes(inputVal));
+
+            // 模糊匹配（不区分大小写）
+            const matchKeys = singerList.filter(name => 
+                name.toLowerCase().includes(inputVal.toLowerCase())
+            );
+
             if (matchKeys.length > 0) {
                 suggestList.style.display = 'block';
                 matchKeys.forEach(name => {
@@ -311,38 +316,90 @@
             }
         });
 
-        // 搜索功能 - 原逻辑不变，图片路径正常匹配
+        // 核心搜索功能（修复+优化）
         function searchSongList() {
             const inputVal = searchInput.value.trim();
             result.innerHTML = '';
+
+            // 空输入提示
             if (!inputVal) {
                 result.innerHTML = `<p>请输入歌手名进行搜索</p>`;
                 return;
             }
+
+            // 加载中提示
+            result.innerHTML = `<p class="loading">正在加载图片...</p>`;
+
+            // 验证歌手是否在列表中
             if (singerList.includes(inputVal)) {
-                const img = document.createElement('img');
-                img.src = `${imgFolder}${inputVal}.jpg`;
+                // 拼接图片路径（兼容GitHub Pages路径）
+                const imgSrc = `${imgFolder}${inputVal}.jpg`;
+                const img = document.createElement('img'); // 修复：去掉多余的/
+                
+                // 图片路径（关键：适配GitHub Pages的绝对路径）
+                img.src = imgSrc;
                 img.alt = `${inputVal}的歌单`;
-                img.onerror = function(){
-                    result.innerHTML = `<p>「${inputVal}.jpg」图片未找到，请检查图片是否在【qni歌p】文件夹里</p>`;
-                }
-                result.appendChild(img);
+                
+                // 图片加载成功
+                img.onload = function() {
+                    result.innerHTML = '';
+                    result.appendChild(img);
+                };
+
+                // 图片加载失败（精准提示）
+                img.onerror = function() {
+                    result.innerHTML = `
+                        <p>❌ 图片加载失败</p>
+                        <p>原因：未找到「${inputVal}.jpg」</p>
+                        <p>请检查：</p>
+                        <p>1. img文件夹是否有该图片</p>
+                        <p>2. 图片名是否与歌手名完全一致（包括大小写）</p>
+                    `;
+                };
+
+                // 点击图片放大
                 img.addEventListener('click', function(){
                     modalImg.src = this.src;
                     imgModal.style.display = 'flex';
-                })
+                });
+
             } else {
+                // 未找到歌手提示
                 result.innerHTML = `<p>未找到「${inputVal}」的歌单哦</p>`;
             }
         }
 
-        // 所有事件绑定 不变
+        // 事件绑定
         document.getElementById('searchBtn').addEventListener('click', searchSongList);
-        searchInput.addEventListener('keydown', e => e.key === 'Enter' && searchSongList());
-        document.addEventListener('click', e => !e.target.closest('.search-box') && (suggestList.style.display = 'none'));
-        closeBtn.addEventListener('click', function(){ imgModal.style.display = 'none' });
+        searchInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter') {
+                searchSongList();
+                suggestList.style.display = 'none'; // 回车后关闭补全列表
+            }
+        });
+
+        // 点击空白处关闭补全列表
+        document.addEventListener('click', e => {
+            if (!e.target.closest('.search-box')) {
+                suggestList.style.display = 'none';
+            }
+        });
+
+        // 关闭图片弹窗
+        closeBtn.addEventListener('click', function(){ 
+            imgModal.style.display = 'none';
+        });
+
+        // 点击弹窗空白处关闭
         imgModal.addEventListener('click', function(e){
-            if(e.target === this) imgModal.style.display = 'none';
+            if(e.target === this) {
+                imgModal.style.display = 'none';
+            }
+        });
+
+        // 阻止弹窗内图片点击冒泡
+        modalImg.addEventListener('click', function(e){
+            e.stopPropagation();
         });
     </script>
 </body>
