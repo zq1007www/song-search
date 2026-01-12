@@ -273,8 +273,8 @@
             "张信哲", "张学友", "张远", "赵雷", "周华健", "周深", "周兴哲"
         ];
         
-        // 图片基础路径（适配Git LFS的原始文件服务器）
-        const imgBaseUrl = "https://media.githubusercontent.com/zq1007www/song-search/main/img/"; 
+        // 🔥 核心修复：补全media域名的完整路径（缺失/media/层级）
+        const imgBaseUrl = "https://media.githubusercontent.com/media/zq1007www/song-search/main/img/"; 
 
         // 获取DOM元素
         const searchInput = document.getElementById('searchInput');
@@ -316,7 +316,7 @@
             }
         });
 
-        // 核心搜索功能（新增中文URL编码适配）
+        // 核心搜索功能（最终版优化）
         function searchSongList() {
             const inputVal = searchInput.value.trim();
             result.innerHTML = '';
@@ -332,10 +332,10 @@
 
             // 验证歌手是否在列表中
             if (singerList.includes(inputVal)) {
-                // 关键：对中文歌手名进行URL编码，适配GitHub的中文文件名编码规则
+                // 1. 对歌手名编码（兼容中英文）
                 const encodedSingerName = encodeURIComponent(inputVal);
-                // 拼接最终图片路径（编码后的名称）
-                const imgSrc = `${imgBaseUrl}${encodedSingerName}.jpg`;
+                // 2. 拼接路径 + 缓存击穿参数（解决CDN缓存）
+                const imgSrc = `${imgBaseUrl}${encodedSingerName}.jpg?t=${Date.now()}`;
                 
                 const img = document.createElement('img');
                 img.src = imgSrc;
@@ -347,15 +347,14 @@
                     result.appendChild(img);
                 };
 
-                // 图片加载失败（精准提示，显示实际请求的路径）
+                // 图片加载失败（精准提示）
                 img.onerror = function() {
                     result.innerHTML = `
                         <p>❌ 图片加载失败</p>
-                        <p>原因：未找到「${inputVal}.jpg」（编码后：${encodedSingerName}.jpg）</p>
+                        <p>歌手名：${inputVal}</p>
+                        <p>编码后：${encodedSingerName}</p>
                         <p>请求路径：${imgSrc}</p>
-                        <p>请检查：</p>
-                        <p>1. img文件夹是否有该图片</p>
-                        <p>2. 图片名是否与歌手名完全一致（包括大小写/错别字）</p>
+                        <p>手动验证：复制上方路径到浏览器地址栏，看是否能打开</p>
                     `;
                 };
 
