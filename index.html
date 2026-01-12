@@ -273,8 +273,8 @@
             "张信哲", "张学友", "张远", "赵雷", "周华健", "周深", "周兴哲"
         ];
         
-        // 图片文件夹路径（已确认是img，与GitHub仓库一致）
-        const imgFolder = "https://raw.githubusercontent.com/zq1007www/song-search/main/img/"; 
+        // 图片基础路径（适配Git LFS的原始文件服务器）
+        const imgBaseUrl = "https://raw.githubusercontent.com/zq1007www/song-search/main/img/"; 
 
         // 获取DOM元素
         const searchInput = document.getElementById('searchInput');
@@ -316,7 +316,7 @@
             }
         });
 
-        // 核心搜索功能（修复+优化）
+        // 核心搜索功能（新增中文URL编码适配）
         function searchSongList() {
             const inputVal = searchInput.value.trim();
             result.innerHTML = '';
@@ -332,11 +332,12 @@
 
             // 验证歌手是否在列表中
             if (singerList.includes(inputVal)) {
-                // 拼接图片路径（兼容GitHub Pages路径）
-                const imgSrc = `${imgFolder}${inputVal}.jpg`;
-                const img = document.createElement('img'); // 修复：去掉多余的/
+                // 关键：对中文歌手名进行URL编码，适配GitHub的中文文件名编码规则
+                const encodedSingerName = encodeURIComponent(inputVal);
+                // 拼接最终图片路径（编码后的名称）
+                const imgSrc = `${imgBaseUrl}${encodedSingerName}.jpg`;
                 
-                // 图片路径（关键：适配GitHub Pages的绝对路径）
+                const img = document.createElement('img');
                 img.src = imgSrc;
                 img.alt = `${inputVal}的歌单`;
                 
@@ -346,14 +347,15 @@
                     result.appendChild(img);
                 };
 
-                // 图片加载失败（精准提示）
+                // 图片加载失败（精准提示，显示实际请求的路径）
                 img.onerror = function() {
                     result.innerHTML = `
                         <p>❌ 图片加载失败</p>
-                        <p>原因：未找到「${inputVal}.jpg」</p>
+                        <p>原因：未找到「${inputVal}.jpg」（编码后：${encodedSingerName}.jpg）</p>
+                        <p>请求路径：${imgSrc}</p>
                         <p>请检查：</p>
                         <p>1. img文件夹是否有该图片</p>
-                        <p>2. 图片名是否与歌手名完全一致（包括大小写）</p>
+                        <p>2. 图片名是否与歌手名完全一致（包括大小写/错别字）</p>
                     `;
                 };
 
