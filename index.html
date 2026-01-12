@@ -20,7 +20,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* 改动1：从space-between改为flex-start，避免底部留白 */
+            justify-content: space-between;
         }
 
         .container {
@@ -28,15 +28,15 @@
             max-width: 700px;
             background: #ffffff;
             border-radius: 28px;
-            padding: 25px 25px; /* 改动2：减少顶部内边距（原35px） */
+            padding: 35px 25px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            margin-bottom: 15px; /* 改动3：减少容器和版权区的间距（原20px） */
+            margin-bottom: 20px;
         }
 
         h1 {
             text-align: center;
             color: #2d3748;
-            margin-bottom: 20px; /* 改动4：减少标题下方间距（原30px） */
+            margin-bottom: 30px;
             font-weight: 700;
             font-size: 26px;
             letter-spacing: 3px;
@@ -53,7 +53,7 @@
 
         #searchInput {
             width: 100%;
-            padding: 18px 22px; /* 改动5：减少输入框内边距（原20px） */
+            padding: 20px 22px;
             padding-right: 110px;
             border: 2px solid #f0f0f0;
             background-color: #f8fafc;
@@ -79,7 +79,7 @@
             right: 6px;
             top: 50%;
             transform: translateY(-50%);
-            padding: 11px 20px; /* 改动6：减少按钮内边距（原13px） */
+            padding: 13px 20px;
             background: linear-gradient(90deg, #3a6186, #89253e);
             color: #fff;
             border: none;
@@ -128,24 +128,21 @@
         }
 
         #result {
-            margin-top: 25px; /* 改动7：减少结果区顶部间距（原35px） */
+            margin-top: 35px;
             width: 100%;
-            min-height: 280px; /* 改动8：核心！大幅降低最小高度（原450px） */
-            max-height: 350px; /* 新增：限制结果区最大高度，避免过高 */
+            min-height: 450px;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             background: #f8fafc;
             border-radius: 20px;
-            padding: 20px; /* 改动9：减少结果区内边距（原25px） */
+            padding: 25px;
             border: 1px solid #f0f0f0;
-            overflow: hidden; /* 新增：超出高度时隐藏，避免滚动 */
         }
 
         #result img {
             max-width: 100%;
-            max-height: 300px; /* 新增：限制图片最大高度，适配结果区 */
+            max-height: 420px;
             border-radius: 16px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
             transition: transform 0.4s ease, box-shadow 0.4s ease;
@@ -163,7 +160,6 @@
             text-align: center;
             padding: 0 15px;
             line-height: 1.6;
-            margin-top: 10px;
         }
 
         .img-modal {
@@ -211,16 +207,14 @@
             max-width: 700px;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 16px;
-            padding: 15px 25px; /* 改动10：减少版权区内边距（原18px） */
+            padding: 18px 25px;
             text-align: center;
             color: #64748b;
             font-size: 16px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            margin-top: 0; /* 新增：确保版权区紧贴容器 */
         }
         .copyright p {
-            line-height: 1.6; /* 改动11：减少行高（原1.8），节省空间 */
-            margin: 2px 0; /* 新增：减少段落间距 */
+            line-height: 1.8;
         }
         .copyright .tel {
             color: #3a6186;
@@ -232,18 +226,15 @@
             font-weight: 600;
         }
 
-        /* 加载动画样式保留 */
-        .img-loading {
-            width: 80px;
-            height: 80px;
-            border: 8px solid #f3f3f3;
-            border-top: 8px solid #3a6186;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+        .loading {
+            color: #3a6186;
+            font-size: 20px;
+            text-align: center;
+            animation: fade 1s infinite alternate;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes fade {
+            from { opacity: 0.6; }
+            to { opacity: 1; }
         }
     </style>
 </head>
@@ -265,10 +256,11 @@
 
     <div class="copyright">
         <p>© 歌单补充 | 请联系306597159@qq.com</p>
-        <p>制作：<span class="author">7an（烤个鸭）</span> | 请不要打我歌p</p>
+        <p>制作：<span class="author">7an（烤个鸭）</span> | 遇到我请不要打我歌p</p>
     </div>
 
     <script>
+        // 歌手列表（完整保留）
         const singerList = [
             "A-Lin", "BEYOND", "S.H.E", "不才", "蔡健雅", "蔡依林", "陈慧娴", "陈粒", "陈绮贞", "戴佩妮",
             "单依纯", "刀郎", "邓紫棋", "方大同", "房东的猫", "凤凰传奇", "古巨基", "郭采洁", "郭静",
@@ -280,10 +272,10 @@
             "张信哲", "张学友", "张远", "赵雷", "周华健", "周深", "周兴哲"
         ];
         
-        // 可选：启用国内镜像提速
-       // const imgPrefix = "https://ghproxy.com/https://media.githubusercontent.com/media/zq1007www/song-search/main/img/";
+        // 🔥 完全按你的规则：固定前缀 + 歌手名 + .jpg
         const imgPrefix = "https://media.githubusercontent.com/media/zq1007www/song-search/main/img/"; 
 
+        // 获取DOM元素
         const searchInput = document.getElementById('searchInput');
         const suggestList = document.getElementById('suggestList');
         const result = document.getElementById('result');
@@ -291,6 +283,7 @@
         const modalImg = document.getElementById('modalImg');
         const closeBtn = document.getElementById('closeBtn');
 
+        // 智能补全逻辑
         searchInput.addEventListener('input', function() {
             const inputVal = this.value.trim();
             suggestList.innerHTML = '';
@@ -321,6 +314,7 @@
             }
         });
 
+        // 核心搜索：纯拼接（前缀+歌手名+.jpg），无任何编码/额外处理
         function searchSongList() {
             const inputVal = searchInput.value.trim();
             result.innerHTML = '';
@@ -330,40 +324,34 @@
                 return;
             }
 
-            // 显示加载动画
-            result.innerHTML = `<div class="img-loading"></div><p>正在加载图片...</p>`;
+            result.innerHTML = `<p class="loading">正在加载图片...</p>`;
 
             if (singerList.includes(inputVal)) {
+                // 🔥 唯一逻辑：固定前缀 + 歌手名 + .jpg + 防缓存参数
                 const imgSrc = `${imgPrefix}${inputVal}.jpg?t=${Date.now()}`;
-                const img = document.createElement('img');
                 
-                // 懒加载 + 跨域优化
-                img.loading = "lazy";
-                img.crossOrigin = "anonymous";
+                const img = document.createElement('img');
                 img.src = imgSrc;
                 img.alt = `${inputVal}的歌单`;
-
-                // 超时重试逻辑
-                let retryCount = 0;
-                img.onerror = function() {
-                    retryCount++;
-                    if (retryCount <= 1) {
-                        img.src = `${imgPrefix}${inputVal}.jpg?t=${Date.now() + Math.random()}`;
-                        result.innerHTML = `<div class="img-loading"></div><p>加载中（重试第${retryCount}次）...</p>`;
-                        return;
-                    }
-                    result.innerHTML = `
-                        <p>❌ 图片加载失败（已重试）</p>
-                        <p>拼接的链接：${imgSrc}</p>
-                        <p>原因：海外CDN访问慢，建议切换国内图床</p>
-                    `;
-                };
-
+                
+                // 加载成功
                 img.onload = function() {
                     result.innerHTML = '';
                     result.appendChild(img);
                 };
 
+                // 加载失败（显示真实拼接的链接，方便你核对）
+                img.onerror = function() {
+                    result.innerHTML = `
+                        <p>❌ 图片加载失败</p>
+                        <p>拼接的链接：${imgSrc}</p>
+                        <p>请检查：</p>
+                        <p>1. GitHub的img文件夹里是否有「${inputVal}.jpg」</p>
+                        <p>2. 文件名是否和歌手名完全一致（大小写/空格/繁体）</p>
+                    `;
+                };
+
+                // 点击放大
                 img.addEventListener('click', function(){
                     modalImg.src = this.src;
                     imgModal.style.display = 'flex';
@@ -374,6 +362,7 @@
             }
         }
 
+        // 事件绑定
         document.getElementById('searchBtn').addEventListener('click', searchSongList);
         searchInput.addEventListener('keydown', e => {
             if (e.key === 'Enter') {
@@ -382,12 +371,14 @@
             }
         });
 
+        // 点击空白处关闭补全
         document.addEventListener('click', e => {
             if (!e.target.closest('.search-box')) {
                 suggestList.style.display = 'none';
             }
         });
 
+        // 关闭弹窗
         closeBtn.addEventListener('click', function(){ 
             imgModal.style.display = 'none';
         });
