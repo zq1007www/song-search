@@ -253,62 +253,16 @@
             letter-spacing: 1px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.15);
         }
-                /* 联系反馈功能样式 */
-        .contact-section {
-            width: 100%;
-            margin: 25px 0 10px;
-            padding: 20px;
-            background: #f8fafc;
-            border-radius: 16px;
-            border: 2px solid #e2e8f0;
-            text-align: center;
-        }
-        .contact-title {
-            color: #2d3748;
-            font-size: 17px;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-        .contact-btn {
-            display: inline-block;
-            padding: 12px 30px;
-            background: linear-gradient(90deg, #3a6186, #89253e);
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-        .contact-btn:hover {
-            transform: scale(1.03);
-            box-shadow: 0 4px 12px rgba(58, 97, 134, 0.3);
-        }
-        .contact-hint {
-            color: #64748b;
-            font-size: 14px;
-            margin-top: 10px;
-            line-height: 1.5;
-        }
     </style>
 </head>
 <body>
-    <div class="update-notice">✨ 1.20更新：新增陈奕迅/联系功能，图片同步更新完毕 ✨</div>
+    <div class="update-notice">✨ 1.20更新：新增陈奕迅，图片同步更新完毕 ✨</div>
     <div class="container">
         <h1>歌单搜索(点击全屏)</h1>
         <div class="search-box">
             <input type="text" id="searchInput" placeholder="输入歌手名">
             <button id="searchBtn">搜索</button>
             <div class="suggest-list" id="suggestList"></div>
-        </div>
-        <!-- 新增问题反馈联系功能 -->
-        <div class="contact-section">
-            <h3 class="contact-title">📩 有问题/建议？联系我</h3>
-            <!-- 替换为你的邮箱，点击直接打开邮件客户端 -->
-            <a href="mailto:306597159@qq.com" class="contact-btn">发送邮件联系</a>
-            <p class="contact-hint">可反馈图片错误、歌手缺失、功能问题等，我会及时处理～</p>
         </div>
         <div id="result"></div>
     </div>
